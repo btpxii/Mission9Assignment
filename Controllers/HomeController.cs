@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Mission9Assignment.Models;
+using Mission9Assignment.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,21 +12,33 @@ namespace Mission9Assignment.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private IBookstoreRepository repo;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController (IBookstoreRepository x)
         {
-            _logger = logger;
+            repo = x;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int pageNum = 1)
         {
-            return View();
-        }
+            int pageSize = 10;
 
-        public IActionResult Privacy()
-        {
-            return View();
+            var books = new BooksViewModel
+            {
+                Books = repo.Books
+                .OrderBy(b => b.Title)
+                .Skip((pageNum - 1) * pageSize)
+                .Take(pageSize),
+
+                PageInfo = new PageInfo
+                {
+                    TotalNumBooks = repo.Books.Count(),
+                    BooksPerPage = pageSize,
+                    CurrentPage = pageNum
+                }
+            };
+
+            return View(books);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
