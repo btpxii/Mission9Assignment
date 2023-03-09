@@ -11,9 +11,10 @@ namespace Mission9Assignment.Pages
 {
     public class AddModel : PageModel
     {
-
+        // creates an instance of ibookstorerepository, used to access stored data on books from db
         private IBookstoreRepository repo { get; set; }
 
+        // sets the above reference equal to an instance of ibookstorerepository
         public AddModel (IBookstoreRepository x)
         {
             repo = x;
@@ -23,12 +24,14 @@ namespace Mission9Assignment.Pages
 
         public string ReturnUrl { get; set; }
 
+        // used to get cart data from the session, store return url for continue button
         public void OnGet(string returnUrl)
         {
             ReturnUrl = returnUrl ?? "/";
             cart = HttpContext.Session.GetJson<Cart>("cart") ?? new Cart();
         }
 
+        // used to add items to the cart session variable when add button is clicked
         public IActionResult OnPost(int bookId, string returnUrl)
         {
             Books b = repo.Books.FirstOrDefault(x => x.BookId == bookId);

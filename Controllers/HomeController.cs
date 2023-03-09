@@ -10,15 +10,19 @@ using System.Threading.Tasks;
 
 namespace Mission9Assignment.Controllers
 {
+    // inherits from base controller class
     public class HomeController : Controller
     {
+        //stores reference to ibookstorerepository, will be used to access stored book data from db
         private IBookstoreRepository repo;
 
+        // sets above reference to an instance of ibookstorerepository
         public HomeController (IBookstoreRepository x)
         {
             repo = x;
         }
 
+        // handles pagination, categorization by breaking up and filtering data based on parameters passed in
         public IActionResult Index(string bookCategory, int pageNum = 1)
         {
             int pageSize = 10;
